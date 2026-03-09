@@ -41,6 +41,7 @@ class HumanPlayer(Player):
         guess = input(
             f'{self.name}, guess a letter or type a word to solve the puzzle: ')
         return guess
+    
 
 class ComputerPlayer(Player):
     def __init__(self, name, vocab):
@@ -53,12 +54,50 @@ class ComputerPlayer(Player):
         self.vocab = noun_list
         
     def turn(self, gstate):
+        vowels = {
+                    'a': 0,
+                    'e': 0,
+                    'i': 0,
+                    'o': 0,
+                    'u': 0
+                }
+        consonants = {
+            'b': 0,
+            'c': 0,
+            'd': 0,
+            'f': 0,
+            'g': 0,
+            'h': 0,
+            'j': 0,
+            'k': 0,
+            'l': 0,
+            'm': 0,
+            'n': 0,
+            'p': 0,
+            'q': 0,
+            'r': 0,
+            's': 0,
+            't': 0,
+            'v': 0,
+            'w': 0,
+            'x': 0,
+            'y': 0,
+            'z': 0
+        }
+        for word in self.vocab:
+            if len(word) == len(gstate.letter_count):
+                for c in word:       
+                    if not gstate.bad_guesses.contains(c.upper()) and not gstate.good_guesses.contains(c.upper()):
+                        if c in consonants: 
+                            consonants[c] += 1
+                        else:
+                            vowels[c] += 1 
+                    
+        sorted_vowels = sorted(vowels.items(): key=lambda x: x[1], reverse=True)
+                        
+                        
+                
         
-        # if guess ==0:
-        #     guess = vowel
-            #   if guess == vowel   
-              
-            #   if u is second letter guess q 
 
             
         
