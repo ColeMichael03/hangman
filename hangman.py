@@ -56,14 +56,22 @@ class ComputerPlayer(Player):
         
     def turn(self, gstate):
         letters = {l: 0 for l in "AEIOUYBCDFGHJKLMNPQRSTVWXZ"}
-        
+        possible_answers = []
         for word in self.vocab:
-            if len(word) == gstate.letter_count:
+                
+                if len(word) != gstate.letter_count:
+                    continue
+                if not gstate.match(word):
+                    continue
+                if any(letter in word for letter in gstate.bad_guesses):
+                    continue
+                possible_answers.append(word)
+        
+        for word in possible_answers:
                 for c in word:       
                     if c in letters and c not in gstate.guesses:
                         letters[c] += 1
                             
-                    
         sort_letters = sorted(letters.items(), key=lambda x: x[1], reverse=True)
         
 
@@ -78,20 +86,12 @@ class ComputerPlayer(Player):
         bot_score = list(gstate.score.values())[1]
         
         if bot_score <= MAX_BAD_GUESSES - 1:
-            return sort_letters[0][0]
-        else:
-            possible_answers = []
             
-            for word in self.vocab:
-                
-                if len(word) != gstate.letter_count:
-                    continue
-                if not gstate.match(word):
-                    continue
-                if any(letter in word for letter in gstate.bad_guesses):
-                    continue
-                
-                possible_answers.append(word)
+            if len(possible_answers) == 1:
+                return possible_answers[0]
+            else:
+                return sort_letters[0][0]
+        else:
             shuffle(possible_answers)
             guess = possible_answers[0]
             return guess
