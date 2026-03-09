@@ -86,6 +86,12 @@ class ComputerPlayer(Player):
             return sorted_vowels[0]
         else:
             for word in self.vocab:
+                potential_words = [
+                    word for word in self.vocab
+                    if len(word) == gstate.letter_count
+                    
+                    
+                ]
                 #need a list of words that contain all of the good_guess letters
                 #with none of the bad_guess letters.
         
