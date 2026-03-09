@@ -84,34 +84,41 @@ class ComputerPlayer(Player):
             'y': 0,
             'z': 0
         }
+        
         for word in self.vocab:
             if len(word) == len(gstate.letter_count):
                 for c in word:       
-                    if not gstate.bad_guesses.contains(c.upper()) and not gstate.good_guesses.contains(c.upper()):
+                    if not gstate.guesses.contains(c.upper()):
                         if c in consonants: 
                             consonants[c] += 1
                         else:
                             vowels[c] += 1 
                     
-        sorted_vowels = sorted(vowels.items(): key=lambda x: x[1], reverse=True)
+        sorted_vowels = sorted(vowels.items(), key=lambda x: x[1], reverse=True)
+        sorted_consts = sorted(consonants.items(), key=lambda x: x[1], \
+                                                                reverse=True)
+        
+        #Heres my algo. Guess likely vowel, then guess consts untill 2 guesses
+        #are left. make the second to last guess a vowel, then on the final
+        #chance, guess a possible remaining word. (will need to implement this
+        #above by making a list of words that contain all guessed letters,
+        #are the same length, and do not contain any wrong letters. Shuffle the
+        #list and select element 0.
+        
+        if gstate.score == 0:
+            return sorted_vowels[0]
+        elif gstate.score <= MAX_BAD_GUESSES - 2:
+            return sorted_consts[0]
+        elif gstate.score == MAX_BAD_GUESSES - 1:
+            return sorted_vowels[0]
+        else:
+            #guess a random word left that fits.
+            pass
+        
+        
                         
                         
                 
-        
-
-            
-        
-       
-        
-        
-        
-        
-        
-
-
-
-
-
 class GameState:
     """Provide information on the current state of the game. Used in the
     Player.turn() method.
