@@ -84,7 +84,6 @@ class ComputerPlayer(Player):
             'y': 0,
             'z': 0
         }
-        
         for word in self.vocab:
             if len(word) == len(gstate.letter_count):
                 for c in word:       
@@ -92,7 +91,8 @@ class ComputerPlayer(Player):
                         if c in consonants: 
                             consonants[c] += 1
                         else:
-                            vowels[c] += 1 
+                            vowels[c] += 1
+                            
                     
         sorted_vowels = sorted(vowels.items(), key=lambda x: x[1], reverse=True)
         sorted_consts = sorted(consonants.items(), key=lambda x: x[1], \
@@ -112,8 +112,9 @@ class ComputerPlayer(Player):
         elif gstate.score == MAX_BAD_GUESSES - 1:
             return sorted_vowels[0]
         else:
-            #guess a random word left that fits.
-            pass
+            for word in self.vocab:
+                #need a list of words that contain all of the good_guess letters
+                #with none of the bad_guess letters.
         
         
                         
