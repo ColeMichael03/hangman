@@ -60,13 +60,14 @@ class ComputerPlayer(Player):
         for word in self.vocab:
             if len(word) == len(gstate.letter_count):
                 for c in word:       
-                    if not gstate.bad_guesses.contains(c.upper()) and not gstate.good_guesses.contains(c.upper()):
+                    if c.upper() not in gstate.bad_guesses and \
+                        c.upper() not in gstate.good_guesses:
                         if c in consonants: 
                             consonants[c] += 1
                         else:
                             vowels[c] += 1 
                     
-        sorted_vowels = sorted(vowels.items(): key=lambda x: x[1], reverse=True)
+        sorted_vowels = sorted(vowels.items(), key=lambda x: x[1], reverse=True)
                         
                         
                 
