@@ -2,6 +2,7 @@
 
 from argparse import ArgumentParser
 from random import choice
+from random import shuffle
 import re
 import sys
 from time import sleep
@@ -54,22 +55,17 @@ class ComputerPlayer(Player):
         self.vocab = noun_list
         
     def turn(self, gstate):
-        consonants = {c: 0 for c in "BCDFGHJKLMNPQRSTVWXZ"}
-        vowels = {v: 0 for v in "AEIOUY"}
+        letters = {l: 0 for l in "AEIOUYBCDFGHJKLMNPQRSTVWXZ"}
         
         for word in self.vocab:
             if len(word) == gstate.letter_count:
                 for c in word:       
-                    if not any(c in guesses for guesses in gstate.guesses):
-                        if c in consonants: 
-                            consonants[c] += 1
-                        elif c in vowels:
-                            vowels[c] += 1
+                    if c in letters and c not in gstate.guesses:
+                        letters[c] += 1
                             
                     
-        sorted_vowels = sorted(vowels.items(), key=lambda x: x[1], reverse=True)
-        sorted_consts = sorted(consonants.items(), key=lambda x: x[1], \
-                                                                reverse=True)
+        sort_letters = sorted(letters.items(), key=lambda x: x[1], reverse=True)
+        
 
         
         #Heres my algo. Guess likely vowel, then guess consts untill 2 guesses
@@ -80,22 +76,25 @@ class ComputerPlayer(Player):
         #list and select element 0.
         
         bot_score = list(gstate.score.values())[1]
-        if bot_score == 0:
-            return sorted_vowels[0]
-        elif bot_score <= MAX_BAD_GUESSES - 2:
-            return sorted_consts[0]
-        elif bot_score == MAX_BAD_GUESSES - 1:
-            return sorted_vowels[0]
+        
+        if bot_score <= MAX_BAD_GUESSES - 1:
+            return sort_letters[0][0]
         else:
             possible_answers = []
+            
             for word in self.vocab:
-                if not all(gstate.good_guesses in let for let in word):
+                
+                if len(word) != gstate.letter_count:
                     continue
-                if not any(gstate.bad_guesses in let for let in word):
+                if not gstate.match(word):
                     continue
-                possible_answers.append[word]
-            possible_answers.shuffle()
-            return possible_answers[0]
+                if any(letter in word for letter in gstate.bad_guesses):
+                    continue
+                
+                possible_answers.append(word)
+            shuffle(possible_answers)
+            guess = possible_answers[0]
+            return guess
                                             
                         
                 
