@@ -36,8 +36,29 @@ class Player:
 # Replace this comment with your implementation of the HumanPlayer and
 # ComputerPlayer classes.
 class HumanPlayer(Player):
+    """
+    Class that represents the actions of a human player. Extends the Player class
+    
+    Attributes: 
+        gstate (GameState): provides information about the current state of the 
+        game. Used to access elements that define logic
+    
+    """
 
     def turn(self, gstate):
+        """
+        The turn method allows a human player to make their turn. Overrides
+        the parent method
+        
+        Args:
+            gstate(Gamestate): provides the information to be printed in 
+            between turns, such as guesses left, the correct and incorrect 
+            letters
+        
+        Returns:
+            guess (string): the players guess.
+        """
+        
         print(gstate)
         guess = input(
             f'{self.name}, guess a letter or type a word to solve the puzzle: ')
@@ -45,16 +66,39 @@ class HumanPlayer(Player):
     
 
 class ComputerPlayer(Player):
+    """
+    Class representing the computers moves, also Extends Player
+    Attributes:
+        name (string): the computers name
+        vocab (list): the possible words
+        
+    """
+    
     def __init__(self, name, vocab):
-        self.name = name
-        noun_list =[]
-        with open ('nounlist.txt', 'r', encoding='UTF-8') as f:
-            for line in f: 
-                noun_list.append(line.strip().upper())
-                
-        self.vocab = noun_list
+        super().__init__(name)
+        self.vocab = vocab
         
     def turn(self, gstate):
+        """
+        The turn method allows the computer to make a guess. Overides the parent
+        method.
+        
+        Args:
+            gstate (GameState): GameState object to provide information about
+            the current aspects of the game to be used in the algorithms logic.
+        Returns:
+            multiple potential return items. Either a single letter string, 
+            or a full word string if it knows the word.
+        
+        """
+        #the algorithm will look at the current viable words (those with the
+        # correct length, containing all the correct letters and none of the
+        # wrong ones) and tally the instances of non guessed letters in a
+        #dictionary. Then sort that dict by largest value to get the letter that
+        #appears the most. If the number of possible words is above 1, guess 
+        #that letter. If only one word is possible, guess it. If there are many
+        #possible words on last turn, choose one word at random.
+        
         letters = {l: 0 for l in "AEIOUYBCDFGHJKLMNPQRSTVWXZ"}
         possible_answers = []
         for word in self.vocab:
@@ -73,15 +117,6 @@ class ComputerPlayer(Player):
                         letters[c] += 1
                             
         sort_letters = sorted(letters.items(), key=lambda x: x[1], reverse=True)
-        
-
-        
-        #Heres my algo. Guess likely vowel, then guess consts untill 2 guesses
-        #are left. make the second to last guess a vowel, then on the final
-        #chance, guess a possible remaining word. (will need to implement this
-        #above by making a list of words that contain all guessed letters,
-        #are the same length, and do not contain any wrong letters. Shuffle the
-        #list and select element 0.
         
         bot_score = list(gstate.score.values())[1]
         
