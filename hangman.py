@@ -54,22 +54,23 @@ class ComputerPlayer(Player):
         self.vocab = noun_list
         
     def turn(self, gstate):
-        consonants = {c: 0 for c in "bcdfghjklmnpqrstvwxyz"}
-        vowels = {v: 0 for v in "aeiou"}
+        consonants = {c: 0 for c in "BCDFGHJKLMNPQRSTVWXZ"}
+        vowels = {v: 0 for v in "AEIOUY"}
         
         for word in self.vocab:
-            if len(word) == len(gstate.letter_count):
+            if len(word) == gstate.letter_count:
                 for c in word:       
-                    if not gstate.guesses.contains(c.upper()):
+                    if not any(c in guesses for guesses in gstate.guesses):
                         if c in consonants: 
                             consonants[c] += 1
-                        else:
+                        elif c in vowels:
                             vowels[c] += 1
                             
                     
         sorted_vowels = sorted(vowels.items(), key=lambda x: x[1], reverse=True)
         sorted_consts = sorted(consonants.items(), key=lambda x: x[1], \
                                                                 reverse=True)
+
         
         #Heres my algo. Guess likely vowel, then guess consts untill 2 guesses
         #are left. make the second to last guess a vowel, then on the final
@@ -78,19 +79,24 @@ class ComputerPlayer(Player):
         #are the same length, and do not contain any wrong letters. Shuffle the
         #list and select element 0.
         
-        if gstate.score == 0:
+        bot_score = list(gstate.score.values())[1]
+        if bot_score == 0:
             return sorted_vowels[0]
-        elif gstate.score <= MAX_BAD_GUESSES - 2:
+        elif bot_score <= MAX_BAD_GUESSES - 2:
             return sorted_consts[0]
-        elif gstate.score == MAX_BAD_GUESSES - 1:
+        elif bot_score == MAX_BAD_GUESSES - 1:
             return sorted_vowels[0]
         else:
+            possible_answers = []
             for word in self.vocab:
-                #need a list of words that contain all of the good_guess letters
-                #with none of the bad_guess letters.
-        
-        
-                        
+                if not all(gstate.good_guesses in let for let in word):
+                    continue
+                if not any(gstate.bad_guesses in let for let in word):
+                    continue
+                possible_answers.append[word]
+            possible_answers.shuffle()
+            return possible_answers[0]
+                                            
                         
                 
 class GameState:
