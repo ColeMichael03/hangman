@@ -119,10 +119,10 @@ class ComputerPlayer(Player):
                             
         sort_letters = sorted(letters.items(), key=lambda x: x[1], reverse=True)
         
-        #Dont use list, use the name attribute.
-        bot_score = list(gstate.score.values())[1]
+
+        bot_score = gstate.score[self.name]
         
-        if bot_score <= MAX_BAD_GUESSES - 1:
+        if bot_score <= gstate.max_score - 1:
             
             if len(possible_answers) == 1:
                 return possible_answers[0]
