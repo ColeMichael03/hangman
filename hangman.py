@@ -92,10 +92,11 @@ class ComputerPlayer(Player):
         
         """
         #the algorithm will look at the current viable words (those with the
-        # correct length, containing all the correct letters and none of the
-        # wrong ones) and tally the instances of non guessed letters in a
-        #dictionary. Then sort that dict by largest value to get the letter that
-        #appears the most. If the number of possible words is above 1, guess 
+        # correct length, containing all the correct letters in position 
+        # and none of the wrong ones) and tally the instances of non guessed 
+        # letters in a dictionary. Then sort that dict by largest value to get 
+        # the letter that appears the most. 
+        # If the number of possible words is above 1, guess 
         #that letter. If only one word is possible, guess it. If there are many
         #possible words on last turn, choose one word at random.
         
@@ -118,6 +119,7 @@ class ComputerPlayer(Player):
                             
         sort_letters = sorted(letters.items(), key=lambda x: x[1], reverse=True)
         
+        #Dont use list, use the name attribute.
         bot_score = list(gstate.score.values())[1]
         
         if bot_score <= MAX_BAD_GUESSES - 1:
